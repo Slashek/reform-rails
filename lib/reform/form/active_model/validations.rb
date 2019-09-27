@@ -58,7 +58,7 @@ module Reform::Form::ActiveModel
 
         validator.errors.each do |name, error| # TODO: handle with proper merge, or something. validator.errors is ALWAYS AM::Errors.
           errors.add(name, error)
-        end
+        end.tap { validator.errors.details.each { |k, v| errors.details[k] = v } }
       end
     end
 
