@@ -3,6 +3,13 @@ en:
   # custom validation error messages
 
   activemodel:
+    attributes:
+      song:
+        title: Custom Song Title
+      album:
+        title: Custom Album Title
+      artist:
+        name: Custom Artist Name
     errors:
       models:
         song:
@@ -17,7 +24,27 @@ en:
               attributes:
                 title:
                   taken: has already been taken
+        uniqueness_validator_on_update_with_duplicate_test/song:
+              attributes:
+                title:
+                  taken: has already been taken
         unique_validator_with_scope_test/song:
               attributes:
                 title:
                   taken: has already been taken
+        unique_validator_with_scope_and_case_insensitive_test/song:
+              attributes:
+                title:
+                  taken: has already been taken
+        uniqueness_validator_on_create_case_insensitive_test/song:
+              attributes:
+                title:
+                  taken: has already been taken
+        uniqueness_validator_with_from_property_test/song:
+              attributes:
+                name:
+                  taken: has already been taken
+        active_model_custom_validation_translations_test/album:
+              attributes:
+                title:
+                  too_short: is too short

@@ -1,18 +1,25 @@
-$VERBOSE=nil # disable noisy warnings
+ENV["RAILS_ENV"] = "test"
 
 require 'minitest/autorun'
 
-require "rails-app/config/environment"
-require 'reform/rails'
+# Load the rails application
+require "active_model/railtie"
 
-# require "reform/form/active_model/validations"
-# Reform::Contract.class_eval do
-#   feature Reform::Form::ActiveModel::Validations
-# end
-# # FIXME!
-# Reform::Form.class_eval do
-#   feature Reform::Form::ActiveModel::Validations
-# end
+Bundler.require
+
+module Dummy
+  class Application < Rails::Application
+    config.eager_load = false
+    config.active_support.deprecation = :stderr
+    
+    if config.respond_to?(:active_model)
+      config.active_model.i18n_customize_full_message = true
+    end      
+  end
+end
+
+# Initialize the rails application
+Dummy::Application.initialize!
 
 require 'active_record'
 class Artist < ActiveRecord::Base
@@ -26,22 +33,22 @@ class Album < ActiveRecord::Base
   has_many :songs
 end
 
-ActiveRecord::Base.establish_connection(
-  :adapter => "sqlite3",
-  :database => "#{Dir.pwd}/database.sqlite3"
-)
+ActiveRecord::Base.establish_connection :adapter => 'sqlite3',
+                                        :database => ':memory:'
+ActiveRecord::Schema.verbose = false
+load "#{File.dirname(__FILE__)}/support/schema.rb"
 
 Minitest::Spec.class_eval do
-  def self.rails4_2?
-    ::ActiveModel::VERSION::MAJOR == 4 and ::ActiveModel::VERSION::MINOR == 2
+  def self.rails_greater_6_0?
+    (::ActiveModel::VERSION::MAJOR == 6 and ::ActiveModel::VERSION::MINOR >= 1) || (::ActiveModel::VERSION::MAJOR >= 7)
   end
 
-  def self.rails4_0?
-    ::ActiveModel::VERSION::MAJOR == 4 and ::ActiveModel::VERSION::MINOR == 0
+  def self.rails5?
+    ::ActiveModel::VERSION::MAJOR.in? [5,6]
   end
 
-  def self.rails3_2?
-    ::ActiveModel::VERSION::MAJOR == 3 and ::ActiveModel::VERSION::MINOR == 2
+  def self.rails_greater_4_1?
+    (::ActiveModel::VERSION::MAJOR == 4 and ::ActiveModel::VERSION::MINOR == 2) || (::ActiveModel::VERSION::MAJOR >= 5)
   end
 end
 

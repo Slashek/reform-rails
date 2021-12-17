@@ -14,19 +14,12 @@ Gem::Specification.new do |spec|
   spec.homepage      = "https://github.com/trailblazer/reform-rails"
   spec.license       = "MIT"
 
-  spec.files         = `git ls-files -z`.split("\x0").reject { |f| f.match(%r{^(test|spec|features)/}) }
+  spec.files         = `git ls-files -z`.split("\x0").reject do |f|
+                         f.match(%r{^(test/|spec/|features/|database.sqlite3)})
+                       end
   spec.executables   = spec.files.grep(%r{^exe/}) { |f| File.basename(f) }
   spec.require_paths = ["lib"]
 
-  spec.add_dependency "reform", ">= 2.2.0"
-  spec.add_dependency "activemodel", ">= 3.2"
-
-  spec.add_development_dependency "rails"
-  spec.add_development_dependency "bundler"
-  spec.add_development_dependency "rake"
-  spec.add_development_dependency "minitest"
-  spec.add_development_dependency "actionpack"
-  spec.add_development_dependency "activerecord"
-  spec.add_development_dependency "mongoid"
-  spec.add_development_dependency "sqlite3"
+  spec.add_dependency "reform", ">= 2.3.1", "< 3.0.0"
+  spec.add_dependency "activemodel", ">= 5.0"
 end

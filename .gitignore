@@ -8,4 +8,7 @@
 /spec/reports/
 /tmp/
 *.gem
-test/dummy/log/*.log
+*.sqlite3
+.byebug*
+*.log
+.rubocop-https*

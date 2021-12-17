@@ -1,7 +1,9 @@
-module Reform::Form::ActiveRecord
+gem 'mongoid', ">= 4.0"
+
+module Reform::Form::Mongoid
   def self.included(base)
     base.class_eval do
-      register_feature Reform::Form::ActiveRecord
+      register_feature Reform::Form::Mongoid
       include Reform::Form::ActiveModel
       include Reform::Form::ORM
       extend ClassMethods
@@ -14,15 +16,11 @@ module Reform::Form::ActiveRecord
       validates_with(UniquenessValidator, options)
     end
     def i18n_scope
-      :activerecord
+      :mongoid
     end
   end
 
-  def to_nested_hash(*)
-    super.with_indifferent_access
-  end
-
-  class UniquenessValidator < ::ActiveRecord::Validations::UniquenessValidator
+  UniquenessValidator = Class.new("::Mongoid::Validatable::UniquenessValidator".constantize) do
     include Reform::Form::ORM::UniquenessValidator
   end
 end
